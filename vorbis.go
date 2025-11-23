@@ -56,7 +56,16 @@ func (m *metadataVorbis) readVorbisComment(r io.Reader) error {
 		if err != nil {
 			return err
 		}
-		m.c[strings.ToLower(k)] = v
+		if strings.ToLower(k) == "genre" {
+			val, ok := m.c[strings.ToLower(k)]
+			if ok {
+				m.c[strings.ToLower(k)] = val + ";" + v
+			} else {
+				m.c[strings.ToLower(k)] = v
+			}
+		} else {
+			m.c[strings.ToLower(k)] = v
+		}
 	}
 
 	if b64data, ok := m.c["metadata_block_picture"]; ok {
